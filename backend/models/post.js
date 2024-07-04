@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
@@ -15,4 +15,4 @@ postSchema.virtual("url").get(function () {
   return `/post/${this._id}`;
 });
 
-module.exports(mongoose.model("Post", postSchema));
+module.exports = mongoose.model("Post", postSchema);
