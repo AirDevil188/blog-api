@@ -33,6 +33,9 @@ app.use("/", indexRouter);
 app.use("/posts", postsRouter);
 app.use("/users", userRouter);
 
+require("./config/passport");
+// passportFile;
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
