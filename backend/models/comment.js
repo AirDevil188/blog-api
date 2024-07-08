@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const commentSchema = new Schema({
   text: { type: String, required: true },
   date: { type: Date, required: true },
+  post: { type: Schema.ObjectId, ref: "Post", required: true },
   user: { type: Schema.ObjectId, ref: "User", required: true },
 });
 
