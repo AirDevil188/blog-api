@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
 exports.list_users_controller = asyncHandler(async (req, res, next) => {
-  const users = await User.find().sort({ username: 1 }).exec();
+  const users = await User.find({}, "username").sort({ username: 1 }).exec();
 
   return res.send(Object.values(users));
 });
