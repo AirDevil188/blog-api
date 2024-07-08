@@ -1,18 +1,36 @@
 const express = require("express");
 const postController = require("../controllers/postController");
+const passport = require("passport");
 
 // router.get("/", indexController.blog_index_controller);
 
 const router = express.Router();
 router.get("/", postController.posts_get_controller);
 
-router.post("/", postController.post_create_controller);
+router.post(
+  "/create",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    return res.send(req.jwt);
+  }
+);
 
-router.put("/:id", postController.post_update_controller);
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    return res.send(req.jwt);
+  }
+);
 
-router.delete("/:id", postController.post_delete_controller);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    return res.send(req.jwt);
+  }
+);
 
 /* GET users listing. */
-// router.get("/", postController.posts_get_controller);
 
 module.exports = router;
