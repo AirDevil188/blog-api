@@ -12,5 +12,4 @@ exports.jwtCreateToken = (req, res) => {
       });
     }
   );
-  console.log(token);
 };
