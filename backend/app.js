@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -13,6 +14,15 @@ const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,PUT,POST",
+    optionsSuccessStatus: 204,
+  })
+);
+
 const mongoDB = process.env.CONNECTION_STRING;
 
 mongoose.connect(mongoDB);
