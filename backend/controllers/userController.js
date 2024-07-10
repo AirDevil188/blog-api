@@ -3,14 +3,20 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
+const passport = require("passport");
+const { jwtCreateToken } = require("../config/jwtCreateToken");
 
-exports.list_users_controller = asyncHandler(async (req, res, next) => {
+// List of Users
+
+exports.list_users_controller_get = asyncHandler(async (req, res, next) => {
   const users = await User.find({}, "username").sort({ username: 1 }).exec();
 
   return res.send(Object.values(users));
 });
 
-exports.create_user_controller = asyncHandler(async (req, res, next) => {
+// Create User - Sign in User
+
+exports.user_create_controller_post = asyncHandler(async (req, res, next) => {
   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
     try {
       const user = new User({
@@ -25,10 +31,26 @@ exports.create_user_controller = asyncHandler(async (req, res, next) => {
   return res.send(req.body);
 });
 
-exports.update_user_controller = asyncHandler(async (req, res, next) => {
-  return res.send("Updating User");
+// Delete User
+
+exports.user_delete_controller = asyncHandler(async (req, res, next) => {
+  return res.send("Deleting User DELETE");
 });
 
-exports.delete_user_controller = asyncHandler(async (req, res, next) => {
-  return res.send("Deleting User");
+// Log In User
+
+exports.user_log_in_controller_post = asyncHandler(async (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      return res.status(401).json(info);
+    }
+
+    req.login(user, { session: false });
+    jwtCreateToken(req, res);
+    console.log(req.user);
+  })(req, res, next);
 });
