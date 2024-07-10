@@ -38,8 +38,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/posts", postsRouter);
-app.use("/users", userRouter);
+app.use("/", postsRouter);
+app.use("/", userRouter);
 
 require("./config/passport");
 // passportFile;
