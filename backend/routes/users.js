@@ -4,10 +4,26 @@ const passport = require("passport");
 
 const userController = require("../controllers/userController");
 
-router.get("/", userController.list_users_controller);
+router.get("/users", userController.list_users_controller);
+
+router.post("/sign-up", userController.create_user_controller);
+
+router.post("/log-in", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json(info);
+    }
+
+    req.login(user, { session: false });
+    jwtCreateToken(req, res);
+  })(req, res, next);
+});
 
 router.put(
-  "/:id",
+  "users/:id",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
     return res.send(req.jwt);
@@ -15,7 +31,7 @@ router.put(
 );
 
 router.delete(
-  "/:id",
+  "users/:id",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
     return res.send(req.jwt);
