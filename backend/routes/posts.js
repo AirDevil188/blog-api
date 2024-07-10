@@ -1,36 +1,19 @@
 const express = require("express");
 const postController = require("../controllers/postController");
 const passport = require("passport");
-
-// router.get("/", indexController.blog_index_controller);
+const { isAuth } = require("../middleware/isAuth");
 
 const router = express.Router();
-router.get("/", postController.posts_get_controller);
+router.get("/", postController.list_posts_controller_get);
 
 router.post(
-  "/create",
-  passport.authenticate("jwt", { session: false }),
-  function (req, res) {
-    return res.send(req.jwt);
-  }
+  "/posts/create",
+  isAuth,
+  postController.post_create_controller_post
 );
 
-router.put(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  function (req, res) {
-    return res.send(req.jwt);
-  }
-);
+router.put("/posts/:id", isAuth, postController.post_update_controller_put);
 
-router.delete(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  function (req, res) {
-    return res.send(req.jwt);
-  }
-);
-
-/* GET users listing. */
+router.delete("/posts/:id", isAuth, postController.post_delete_controller);
 
 module.exports = router;
