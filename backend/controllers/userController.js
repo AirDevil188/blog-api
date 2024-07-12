@@ -22,13 +22,13 @@ exports.user_create_controller_post = asyncHandler(async (req, res, next) => {
       const user = new User({
         username: req.body.username,
         password: hashedPassword,
+        admin: false,
       });
       await user.save();
     } catch {
       next(err);
     }
   });
-  return res.send(req.body);
 });
 
 // Delete User
