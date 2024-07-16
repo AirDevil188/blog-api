@@ -4,7 +4,7 @@ exports.jwtCreateToken = (req, res) => {
   jwt.sign(
     { user: req.user._id },
     process.env.SECRET,
-    { expiresIn: "25min" },
+    { expiresIn: "1d" },
     (err, token) => {
       res.json({
         token,
