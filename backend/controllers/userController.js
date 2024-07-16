@@ -29,13 +29,15 @@ exports.user_create_controller_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
-
     if (!errors.isEmpty()) {
-      console.log("err");
-
       return res.status(400).json([errors]);
     } else {
+      const user = await User.findOne({ username: req.body.username });
+      if (user) {
+        return res
+          .status(400)
+          .json([{ errors: [{ msg: "User already exists" }] }]);
+      }
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         try {
           const user = new User({
@@ -52,22 +54,6 @@ exports.user_create_controller_post = [
     }
   }),
 ];
-
-// exports.user_create_controller_post = asyncHandler(async (req, res, next) => {
-//   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-//     try {
-//       const user = new User({
-//         username: req.body.username,
-//         password: hashedPassword,
-//         admin: false,
-//       });
-//       await user.save();
-//     } catch {
-//       next(err);
-//     }
-//   });
-//   return res.send(req.body);
-// });
 
 // Delete User
 
