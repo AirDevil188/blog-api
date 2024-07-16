@@ -70,11 +70,10 @@ exports.user_log_in_controller_post = asyncHandler(async (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(401).json(info);
+      return res.status(401).json([{ errors: [{ msg: info.message }] }]);
     }
 
     req.login(user, { session: false });
     jwtCreateToken(req, res);
-    console.log(req.user);
   })(req, res, next);
 });
