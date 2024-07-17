@@ -42,13 +42,22 @@ app.set("view engine", "ejs");
 require("./config/passport");
 // passportFile;
 
+// middleware to check if the jwt token is expired
 app.use(async (req, res, next) => {
   if (!req.headers.authorization) {
-    next();
+    return next();
   }
   const token = String(req.headers.authorization.split("Bearer "));
   const decoded = jwtDecode(token);
+  const currentDateTime = new Date(Date.now()).toLocaleTimeString();
+  const tokenExpiresIn = new Date(decoded.exp * 1000).toLocaleTimeString();
 
+  // if the token expired return
+  if (currentDateTime > tokenExpiresIn) {
+    return next();
+  }
+
+  // if the token is valid find the user and assign req.user to user / and then send the information of the user to the frontend
   try {
     const user = await User.findById(decoded.user);
     req.user = user;
