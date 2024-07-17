@@ -3,8 +3,6 @@ import { useContext } from "react";
 import { UserContext } from "../App";
 
 const SignUp = () => {
-  const { userObject, setUserObject } = useContext(UserContext);
-
   const [error, setError] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,12 +14,6 @@ const SignUp = () => {
     try {
       const response = await fetch("http://localhost:8080/sign-up", options);
       if (response.ok) {
-        const newUser = {
-          ...userObject,
-          username: formData.get("username"),
-          password: formData.get("password"),
-        };
-        setUserObject(newUser);
         return await response.json();
       } else {
         throw {
