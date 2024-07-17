@@ -14,6 +14,7 @@ const SignUp = () => {
     try {
       const response = await fetch("http://localhost:8080/sign-up", options);
       if (response.ok) {
+        setError(null);
         return await response.json();
       } else {
         throw {
