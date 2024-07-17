@@ -6,6 +6,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const jwtDecode = require("jwt-decode").jwtDecode;
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const indexRouter = require("./routes/index");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/users");
 
+const User = require("./models/user");
 const app = express();
 
 app.use(
@@ -37,13 +39,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
+require("./config/passport");
+// passportFile;
+
+app.use(async (req, res, next) => {
+  if (!req.headers.authorization) {
+    next();
+  }
+  const token = String(req.headers.authorization.split("Bearer "));
+  const decoded = jwtDecode(token);
+
+  try {
+    const user = await User.findById(decoded.user);
+    req.user = user;
+    return res.json({ user: user });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 app.use("/", indexRouter);
 app.use("/", postsRouter);
 app.use("/", userRouter);
-
-require("./config/passport");
-// passportFile;
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
