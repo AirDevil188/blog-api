@@ -11,7 +11,7 @@ const App = () => {
   const [userObject, setUserObject] = useState(null);
 
   useEffect(() => {
-    const checkValidation = async () => {
+    const checkJWTToken = async () => {
       const token = localStorage.getItem("token");
       const options = {
         method: "GET",
@@ -31,12 +31,14 @@ const App = () => {
         }
 
         const response = await fetch("http://localhost:8080/", options);
-        setUserObject(response);
+        const data = await response.json();
 
-        return await response.json();
+        setUserObject(data);
+
+        return data;
       }
     };
-    checkValidation();
+    checkJWTToken();
   }, []);
 
   return (
