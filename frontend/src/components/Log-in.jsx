@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [error, setError] = useState(null);
@@ -18,18 +17,17 @@ const LogIn = () => {
     };
     try {
       const response = await fetch(`http://localhost:8080/log-in`, options);
-      console.log(response, "response");
       if (response.ok) {
         const newUser = {
-          ...userObject,
-          username: formData.get("username"),
-          password: formData.get("password"),
+          user: {
+            username: formData.get("username"),
+            password: formData.get("password"),
+          },
         };
         setUserObject(newUser);
         const token = await response.json();
         localStorage.setItem("token", String(Object.values(token)));
         setError(null);
-        useNavigate("/");
       } else {
         throw {
           json: setError(await response.json()),
